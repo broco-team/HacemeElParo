@@ -39,7 +39,7 @@ class PublishAdScreen extends React.Component {
         </TouchableHighlight>
       }
       centerComponent={{ text: 'Publicar Tarea', style: styles.header }} 
-      backgroundColor={'rgb(0,173,239)'}
+      backgroundColor={'#2e4964'}
     />
   })
 
@@ -98,7 +98,7 @@ class PublishAdScreen extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    nID: state.get('todos').size
+    nID: state.getIn(['todosReducer', 'todos']).size
   }
 }
 

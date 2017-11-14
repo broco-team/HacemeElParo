@@ -9,10 +9,11 @@ import {
   View,
   TouchableHighlight
 } from 'react-native'
-import {
-  SearchBar,
-  Header
+import { 
+  Header,
+  Card
 } from 'react-native-elements'
+import Money from '../components/Money'
 
 
 class TodoScreen extends React.Component {
@@ -31,22 +32,18 @@ class TodoScreen extends React.Component {
         </TouchableHighlight>
       }
       centerComponent={{ text: 'Tareas', style: styles.header }} 
-      backgroundColor={'rgb(0,173,239)'} />
+      backgroundColor={'#2e4964'}
+      rightComponent={ <Money quantity={ 0 }/> } />
   })
 
   render() {
     return (
       <View style={styles.container}>
-        <SearchBar
-          noIcon
-          onChangeText={(text) => this.setState({text})}
-          value={'Buscar.. '}
-          lightTheme={ true } />
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
             {
-              this.props.todos ?
+              this.props.todos.size > 0 ?
               this.props.todos.map((element, index) => (
                   <SimpleAd
                     title={ element.getIn(['todo', 'title']) }
@@ -57,12 +54,14 @@ class TodoScreen extends React.Component {
                     key={ element.get('id') }
                   />
               ))
-              : <Card title={ 'No se cuenta con tareas disponibles.' } titleStyle={ styles.title } />   
+              : <Card title={ 'No se cuenta con tareas disponibles.' } titleStyle={ styles.title } >
+                  <Text> Publica una tarea :) </Text>
+                </Card>
             }
         </ScrollView>
         <TouchableHighlight onPress={() => this.props.navigation.navigate('PublishAdNavigator')} underlayColor='rgba(0,0,0,0)'>
           <View style={styles.iconView}>
-            <Ionicons name="ios-add-circle" size={30} color="rgb(0,173,239)" />
+            <Ionicons name="ios-add-circle" size={65} color="rgb(0,173,239)" />
           </View>
         </TouchableHighlight>
       </View>
@@ -72,7 +71,7 @@ class TodoScreen extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    todos: state.get("todos")
+    todos: state.getIn(['todosReducer', 'todos'])
   }
 }
 
@@ -87,7 +86,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   contentContainer: {
-    paddingTop: 30,
+    paddingTop: 70,
   },
   iconView: {
     alignSelf: 'flex-end',

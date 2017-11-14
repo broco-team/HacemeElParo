@@ -1,60 +1,32 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View, Alert, Image } from 'react-native'
+import { Platform, StatusBar, StyleSheet, View, Alert, Image, Text } from 'react-native'
 import { Button, Divider } from 'react-native-elements'
-import { AppLoading, Asset, Font, Constants, Facebook } from 'expo'
+import { AppLoading, Asset, Font, Constants } from 'expo'
 import { Ionicons } from '@expo/vector-icons'
-import MainTabNavigator from './navigation/MainTabNavigator'
+
+import LoginNavigator from './navigation/LoginNavigator'
 
 import { Provider } from 'react-redux'
-import { createStore } from 'redux'
-import todos from './redux/todos'
+import { createStore, applyMiddleware, compose } from 'redux'
+import createSagaMiddleware from 'redux-saga'
+import dataSaga from './sagas/sagas'
+import reducer from './redux/index'
 import devToolsEnhancer from 'remote-redux-devtools'
 
-const store = createStore(todos, devToolsEnhancer())
+const sagaMiddleware = createSagaMiddleware()
+
+const configureStore = () => {
+  const store = createStore(reducer, compose(applyMiddleware(sagaMiddleware), devToolsEnhancer()))
+  sagaMiddleware.run(dataSaga)
+  return store
+}
+
 
 export default class App extends React.Component {
-  state = {
-    isLoadingComplete: false,
-    isLoggedIn: false,
-  }
-
-  _handleFacebookLogin = async () => {
-    try {
-      const { type, token } = await Facebook.logInWithReadPermissionsAsync(
-        '164023457482938',
-        { permissions: ['public_profile'], behavior: 'native' }
-      )
-
-      switch (type) {
-        case 'success': {
-          const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-          const profile = await response.json();
-          Alert.alert(
-            'Inicio Sesión!',
-            `Bienvenido, ${profile.name}!`,
-          )
-          this.setState({ isLoggedIn: true })
-          break
-        }
-        case 'cancel': {
-          Alert.alert(
-            'Cancelado!',
-            'Inicio Sesión Cancelado!',
-          )
-          break
-        }
-        default: {
-          Alert.alert(
-            'Oops!',
-            'Inicio Sesión Fallo!',
-          )
-        }
-      }
-    } catch (e) {
-      Alert.alert(
-        'Oops!',
-        'Inicio Sesión Fallo!',
-      )
+  constructor(props){
+    super(props)
+    this.state = {
+      isLoadingComplete: false,
     }
   }
 
@@ -64,23 +36,12 @@ export default class App extends React.Component {
         <AppLoading
           startAsync={this._loadResourcesAsync}
           onError={this._handleLoadingError}
-          onFinish={this._handleFinishLoading}
-        />
-      );
-    } else if (!this.state.isLoggedIn) {
-      return (
-        <View style={styles.container}>
-          <Image source={ require('./assets/icons/app-icon.png') } />
-          <Divider style={ styles.divider } />
-          <Button
-            onPress={this._handleFacebookLogin}                
-            title='Iniciar Sesión'/>
-        </View>
+          onFinish={this._handleFinishLoading} />
       )
     } else {
       return (
-        <Provider store={store}>
-            <MainTabNavigator />
+        <Provider store={ configureStore() } >
+          <LoginNavigator />
         </Provider>
       )
     }

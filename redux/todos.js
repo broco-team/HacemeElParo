@@ -32,33 +32,33 @@ export const delete_do = (id) => {
 //Default State
 const default_state = fromJS({
   todos: [],
-  visibilityFilter: ''
+  visibilityFilter: '',
 })
 
 const reducer = (state=default_state, action={}) => {
   switch(action.type){
 
     case ADD_TODO:
-      console.log('State: '+state)
-      console.log('Action: '+action)
+      /*console.log('State: '+state)
+      console.log('Action: '+action)*/
       const added_todos = state.get('todos').push(fromJS({id: action.id, todo: action.todo}))
       return state.set('todos', added_todos)
 
    case EDIT_TODO:
-      console.log('State: '+state)
-      console.log('Action: '+action)
+      /*console.log('State: '+state)
+      console.log('Action: '+action)*/
       const index = state.get('todos').findIndex(todo => todo.get('id') === action.id)
       return state.setIn(['todos', index, 'todo'], action.todo)
 
     case DELETE_TODO:
-      console.log('State: '+state)
-      console.log('Action: '+action)
+      /*console.log('State: '+state)
+      console.log('Action: '+action)*/
       const not_deleted_todos = state.get('todos').filter(todo => todo.get('id') !== action.id)
       return state.set('todos', not_deleted_todos)
 
     default:
-      console.log('State: '+state)
-      console.log('Action: '+action)
+      /*console.log('State: '+state)
+      console.log('Action: '+action)*/
       return state
   }
 }

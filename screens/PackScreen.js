@@ -27,7 +27,7 @@ class PackScreen extends React.Component {
         </TouchableHighlight>
       }
       centerComponent={{ text: 'Packs', style: styles.header }} 
-      backgroundColor={'rgb(0,173,239)'} />
+      backgroundColor={'#2e4964'} />
   })
 
 	render() {
@@ -36,9 +36,6 @@ class PackScreen extends React.Component {
         <ScrollView 
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
-          <Pack
-            title={'Welcoming Gift'}
-            description={'A gift just for you!'} />
           <Pack
             title={'Basic Pack'}
             description={'50 coins just for $5'} />
