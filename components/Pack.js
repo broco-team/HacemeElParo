@@ -6,13 +6,14 @@ import {
 } from 'react-native'
 import { PricingCard } from 'react-native-elements'
 
-const Pack = ({ title, description, price }) => (
+const Pack = ({ title, description, price, f, direction, amount }) => (
 	<View>
 		<PricingCard
       title={ title }
       price={ price }
       info={ ['Descripción: ', description] }
-      button={{ title: 'Comprar', icon: 'add-shopping-cart' }} />
+      button={{ title: 'Comprar', icon: 'add-shopping-cart' }}
+      onButtonPress={ () => f.navigate(direction, { amount: amount }) } />
 	</View>
 )
 

@@ -13,8 +13,8 @@ const responseJSON = (response) => {
 }
 
 const fetchProfilePicture = (fbid) => {
-  console.log(`http://graph.facebook.com/${fbid}/picture?redirect=0`)
-  return fetch(`http://graph.facebook.com/${fbid}/picture?redirect=0`)
+  console.log(`http://graph.facebook.com/${fbid}/picture?redirect=0&type=large`)
+  return fetch(`http://graph.facebook.com/${fbid}/picture?redirect=0&type=large`)
 }
 
 const fetchUserSaga = function * fetchUserSaga(action) {
@@ -26,13 +26,14 @@ const fetchUserSaga = function * fetchUserSaga(action) {
     const responseProfilePicture = yield call(fetchProfilePicture, user.id)
     //console.log(responseProfilePicture)
     const picture = yield call(responseJSON, responseProfilePicture)
+    console.log(picture.data.url)
 
     yield put({
       type: SET_USER,
       user: {
         id: user.id,
         name: user.name,
-        picture: picture.url,
+        picture: picture.data.url,
         money: 0,
       }
     })

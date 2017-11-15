@@ -5,6 +5,8 @@ import { Header, Icon } from 'react-native-elements'
 import TodoScreen from '../screens/TodoScreen';
 import PublishAdScreen from '../screens/PublishAdScreen';
 import PackScreen from '../screens/PackScreen';
+import PaymentScreen from '../screens/PaymentScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import SettingScreen from '../screens/SettingScreen';
 
 export const TodoScreenNavigator = StackNavigator(
@@ -22,6 +24,17 @@ export const PackScreenNavigator = StackNavigator(
   {
     PackScreenNavigator: {
       screen: PackScreen,
+    },
+    PaymentScreenNavigator: {
+      screen: PaymentScreen,
+    }
+  }
+);
+
+export const ProfileScreenNavigator = StackNavigator(
+  {
+    ProfileScreenNavigator: {
+      screen: ProfileScreen,
     }
   }
 );

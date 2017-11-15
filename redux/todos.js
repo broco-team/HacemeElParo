@@ -6,11 +6,12 @@ export const DELETE_TODO = 'DELETE_TODO'
 export const EDIT_TODO = 'EDIT_TODO'
 
 //Action Creator
-export const add_todo = (id, todo) => {
+export const add_todo = (id, todo, userId) => {
   return {
     type: ADD_TODO,
     todo,
-    id
+    id,
+    userId,
   }
 }
 

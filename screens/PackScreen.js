@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux'
 import {
   View,
   ScrollView,
@@ -9,6 +10,7 @@ import {
 import { Header } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons'
 import Pack from '../components/Pack'
+import Money from '../components/Money'
 
 
 class PackScreen extends React.Component {
@@ -16,19 +18,41 @@ class PackScreen extends React.Component {
 		super(props)
 	}
 
-	static navigationOptions = ({ navigation }) => ({
-    drawerLabel: 'Packs', 
-    header: <Header
-      leftComponent={
-        <TouchableHighlight onPress={() => navigation.navigate('DrawerToggle')} underlayColor='rgba(0,0,0,0)'>
-          <View>
-            <Ionicons name="md-list" size={30} color="white" />
+  componentWillMount(){
+    const { setParams } = this.props.navigation
+    setParams({ user: this.props.user })
+  }
+
+	static navigationOptions = ({ navigation }) => {
+
+    const { state } = navigation
+
+    console.log(state)
+
+    return ({
+      drawerLabel: 'Packs', 
+      header: <Header
+        leftComponent={
+          <TouchableHighlight onPress={() => navigation.navigate('DrawerToggle')} underlayColor='rgba(0,0,0,0)'>
+            <View>
+              <Ionicons name="md-list" size={30} color="white" />
+            </View>
+          </TouchableHighlight>
+        }
+        centerComponent={{ text: 'Packs', style: styles.header }} 
+        backgroundColor={'#2e4964'} 
+        rightComponent={
+          <View> 
+          {
+            (typeof state.params !== 'undefined'  &&  state.params.hasOwnProperty('user')) ? 
+            <Money quantity={ state.params.user.get('money') }/>
+            :
+            <Money quantity={ 0 }/> 
+          }
           </View>
-        </TouchableHighlight>
-      }
-      centerComponent={{ text: 'Packs', style: styles.header }} 
-      backgroundColor={'#2e4964'} />
-  })
+        } />
+    })
+  }
 
 	render() {
 		return (
@@ -38,18 +62,40 @@ class PackScreen extends React.Component {
           contentContainerStyle={styles.contentContainer}>
           <Pack
             title={'Basic Pack'}
-            description={'50 coins just for $5'} />
+            description={'50 coins just for $5'}
+            f={ this.props.navigation }
+            direction={ 'PaymentScreenNavigator' }
+            amount={ 50 } />
           <Pack
             title={'Pro Pack'}
-            description={'100 coins just for $50'} />
+            description={'100 coins just for $50'}
+            f={ this.props.navigation }
+            direction={ 'PaymentScreenNavigator' }
+            amount={ 100 } />
           <Pack
             title={'Epic Pack'}
-            description={'1000 coins just for $500'} />
+            description={'1000 coins just for $500'}
+            f={ this.props.navigation }
+            direction={ 'PaymentScreenNavigator' }
+            amount={ 1000 } /> 
         </ScrollView>
 			</View>
 		);
 	}
 }
+
+const mapStateToProps = state => {
+  return {
+    user: state.getIn(['userReducer', 'user'])
+  }
+}
+
+const _PackScreen = connect(
+  mapStateToProps,
+  null
+)(PackScreen)
+
+export default _PackScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -85,4 +131,3 @@ const styles = StyleSheet.create({
   },
 })
 
-export default PackScreen;

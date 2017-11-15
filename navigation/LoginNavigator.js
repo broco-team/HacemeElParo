@@ -5,12 +5,12 @@ import MainTabNavigator from './MainTabNavigator'
 
 export default StackNavigator(
   {
-    Login: {
-      screen: LoginScreen,
-      navigationOptions: { header: null } 
-    },
     Main: {
       screen: MainTabNavigator,
+      navigationOptions: { header: null } 
+    },
+    Login: {
+      screen: LoginScreen,
       navigationOptions: { header: null } 
     },
   },

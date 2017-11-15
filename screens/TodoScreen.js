@@ -11,7 +11,8 @@ import {
 } from 'react-native'
 import { 
   Header,
-  Card
+  Card,
+  Button
 } from 'react-native-elements'
 import Money from '../components/Money'
 
@@ -21,20 +22,41 @@ class TodoScreen extends React.Component {
     super(props)
   }
 
-  static navigationOptions = ({ navigation }) => ({
-    drawerLabel: 'Tareas', 
-    header: <Header
-      leftComponent={
-        <TouchableHighlight onPress={() => navigation.navigate('DrawerToggle')} underlayColor='rgba(0,0,0,0)'>
-          <View>
-            <Ionicons name="md-list" size={30} color="white" />
-          </View>
-        </TouchableHighlight>
-      }
-      centerComponent={{ text: 'Tareas', style: styles.header }} 
-      backgroundColor={'#2e4964'}
-      rightComponent={ <Money quantity={ 0 }/> } />
-  })
+  componentWillMount(){
+    const { setParams } = this.props.navigation
+    setParams({ user: this.props.user })
+  }
+
+  static navigationOptions = ({ navigation }) => {
+
+    const { state } = navigation
+
+    console.log(state)
+
+    return({
+      drawerLabel: 'Tareas', 
+      header: <Header
+        leftComponent={
+          <TouchableHighlight onPress={() => navigation.navigate('DrawerToggle')} underlayColor='rgba(0,0,0,0)'>
+            <View>
+              <Ionicons name="md-list" size={30} color="white" />
+            </View>
+          </TouchableHighlight>
+        }
+        centerComponent={{ text: 'Tareas', style: styles.header }} 
+        backgroundColor={'#2e4964'}
+        rightComponent={ 
+          <View> 
+            {
+              (typeof state.params !== 'undefined'  &&  state.params.hasOwnProperty('user')) ? 
+              <Money quantity={ state.params.user.get('money') }/>
+              :
+              <Money quantity={ 0 }/> 
+            }
+            </View>
+        } />
+      })
+  } 
 
   render() {
     return (
@@ -59,11 +81,13 @@ class TodoScreen extends React.Component {
                 </Card>
             }
         </ScrollView>
-        <TouchableHighlight onPress={() => this.props.navigation.navigate('PublishAdNavigator')} underlayColor='rgba(0,0,0,0)'>
-          <View style={styles.iconView}>
-            <Ionicons name="ios-add-circle" size={65} color="rgb(0,173,239)" />
-          </View>
-        </TouchableHighlight>
+        <View 
+          style={styles.btnPosition} > 
+          <Button
+            icon={{ name: 'add', color: 'white', size: 35, }}
+            buttonStyle={ styles.btnPlus }
+            onPress={() => this.props.navigation.navigate('PublishAdNavigator')} />
+        </View>
       </View>
     );
   }
@@ -71,7 +95,8 @@ class TodoScreen extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    todos: state.getIn(['todosReducer', 'todos'])
+    todos: state.getIn(['todosReducer', 'todos']),
+    user: state.getIn(['userReducer', 'user'])
   }
 }
 
@@ -115,6 +140,17 @@ const styles = StyleSheet.create({
   divider: { 
     height: 10,
     backgroundColor: 'white',
+  },
+  btnPlus: { 
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#2e4964',
+  },
+  btnPosition: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    padding: 10,
   }
 });
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { DrawerNavigator } from 'react-navigation';
-import { TodoScreenNavigator, PackScreenNavigator, SettingScreenNavigator } from './ScreenNavigator';
+import { TodoScreenNavigator, PackScreenNavigator, ProfileScreenNavigator, SettingScreenNavigator } from './ScreenNavigator';
 
 export default DrawerNavigator(
   {
@@ -9,6 +9,9 @@ export default DrawerNavigator(
     },
     Packs: {
       screen: PackScreenNavigator,
+    },
+    Profile: {
+      screen: ProfileScreenNavigator,
     },
     Settings: {
       screen: SettingScreenNavigator,

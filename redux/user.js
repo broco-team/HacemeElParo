@@ -6,6 +6,8 @@ export const SET_USER = 'SET_USER'
 export const GET_MY_TODOS = 'GET_MY_TODOS'
 export const TOGGLE_LOGGED = 'TOGGLE_LOGGED'
 export const ERROR = 'ERROR'
+export const REMOVE_MONEY = 'REMOVE_MONEY'
+export const ADD_MONEY = 'ADD_MONEY'
 
 //Action Creator
 
@@ -37,16 +39,30 @@ export const toggle_logged = () => {
   }
 }
 
+export const add_money = (amount) => {
+  return {
+    type: ADD_MONEY,
+    amount,
+  }
+}
+
+export const remove_money = (amount) => {
+  return {
+    type: REMOVE_MONEY,
+    amount,
+  }
+}
+
 //Default State
 const default_state = fromJS({
-  isLoggedIn: false,
+  isLoggedIn: true,
   isFetching: false,
   errorFetching: false,
   user: {
-    id: '',
-    name: '',
-    picture: '',
-    money: 0,
+    id: '10155842589724500',
+    name: 'Diego Sosa',
+    picture: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/18199565_10155250321454500_8272315564343484143_n.jpg?oh=2df122ddd18569433e878abd3ee3035c&oe=5AAC06BC',
+    money: 100,
   }
 })
 
@@ -60,7 +76,8 @@ const reducer = (state=default_state, action={}) => {
     case SET_USER:
       /*console.log('State: '+state)
       console.log('Action: '+action)*/
-      let newUser = state.set('user', fromJS({id: action.user.id, name: action.user.name}))
+      let money = state.getIn(['user', 'money'])
+      let newUser = state.set('user', fromJS({id: action.user.id, name: action.user.name , picture: action.user.picture, money}))
       let nofetchUser = newUser.set('isFetching', false)
       return nofetchUser
     case TOGGLE_LOGGED:
@@ -74,6 +91,12 @@ const reducer = (state=default_state, action={}) => {
       console.log('Action: '+action)*/
       let error = state.set('errorFetching', true)
       return error
+    case ADD_MONEY:
+      let amoney = state.setIn(['user', 'money'], state.getIn(['user', 'money']) + action.amount)
+      return amoney
+    case REMOVE_MONEY:
+      let rmoney = state.setIn(['user', 'money'], state.getIn(['user', 'money']) - action.amount)
+      return rmoney
     default:
       /*console.log('State: '+state)
       console.log('Action: '+action)*/

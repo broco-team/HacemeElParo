@@ -14,7 +14,7 @@ const Money = ({ quantity }) => (
       name='coin'
       type='material-community'
       color='#fff' />
-   <Text style={{color: 'white'}}>  x Q{quantity}</Text>
+   <Text style={{color: 'white'}}> {quantity} </Text>
   </View>
 )
 

@@ -15,6 +15,8 @@ import {
 import { Ionicons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
 import { add_todo } from '../redux/todos'
+import { remove_money } from '../redux/user'
+import Money from '../components/Money'
 
 class PublishAdScreen extends React.Component {
   constructor(props){
@@ -28,20 +30,41 @@ class PublishAdScreen extends React.Component {
     }
   }
 
-  static navigationOptions = ({ navigation }) => ({
-    drawerLabel: 'Publicar Tarea', 
-    header: <Header
-      leftComponent={
-        <TouchableHighlight onPress={() => navigation.goBack(null)} underlayColor='rgba(0,0,0,0)'>
-          <View>
-            <Ionicons name="ios-arrow-back" size={30} color="white" />
+  componentWillMount(){
+    const { setParams } = this.props.navigation
+    setParams({ user: this.props.user })
+  }
+
+  static navigationOptions = ({ navigation }) => {
+
+    const { state } = navigation
+
+    console.log(state)
+
+    return ({
+      drawerLabel: 'Publicar Tarea', 
+      header: <Header
+        leftComponent={
+          <TouchableHighlight onPress={() => navigation.goBack(null)} underlayColor='rgba(0,0,0,0)'>
+            <View>
+              <Ionicons name="ios-arrow-back" size={30} color="white" />
+            </View>
+          </TouchableHighlight>
+        }
+        centerComponent={{ text: 'Publicar Tarea', style: styles.header }} 
+        backgroundColor={'#2e4964'} 
+        rightComponent={
+          <View> 
+          {
+            (typeof state.params !== 'undefined'  &&  state.params.hasOwnProperty('user')) ? 
+            <Money quantity={ state.params.user.get('money') }/>
+            :
+            <Money quantity={ 0 }/> 
+          }
           </View>
-        </TouchableHighlight>
-      }
-      centerComponent={{ text: 'Publicar Tarea', style: styles.header }} 
-      backgroundColor={'#2e4964'}
-    />
-  })
+        } />
+    })
+  }
 
   render() {
     return (
@@ -84,7 +107,8 @@ class PublishAdScreen extends React.Component {
               
               <Button
                 onPress={() => {
-                  this.props.onPlusClick(this.props.nID, this.state)
+                  this.props.onPlusClick(this.props.nID, this.state, this.props.user.get('id'))
+                  this.props.onRemoveClick(10)
                   this.props.navigation.goBack(null)
                 }}
                 title='Publicar'/>
@@ -98,15 +122,19 @@ class PublishAdScreen extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    nID: state.getIn(['todosReducer', 'todos']).size
+    nID: state.getIn(['todosReducer', 'todos']).size,
+    user: state.getIn(['userReducer', 'user']),
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onPlusClick: (id, todo) => {
-      dispatch(add_todo(id, todo))
-    }
+    onPlusClick: (id, todo, userId) => {
+      dispatch(add_todo(id, todo, userId))
+    },
+    onRemoveClick: (amount) => {
+      dispatch(remove_money(amount))
+    },
   }
 }
 
@@ -114,6 +142,8 @@ const _PublishAdScreen = connect(
   mapStateToProps,
   mapDispatchToProps
 )(PublishAdScreen)
+
+export default _PublishAdScreen
 
 const styles = StyleSheet.create({
   container: {
@@ -149,4 +179,3 @@ const styles = StyleSheet.create({
   },
 })
 
-export default _PublishAdScreen
