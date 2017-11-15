@@ -81,13 +81,11 @@ class TodoScreen extends React.Component {
                 </Card>
             }
         </ScrollView>
-        <View 
-          style={styles.btnPosition} > 
-          <Button
-            icon={{ name: 'add', color: 'white', size: 35, }}
-            buttonStyle={ styles.btnPlus }
-            onPress={() => this.props.navigation.navigate('PublishAdNavigator')} />
-        </View>
+        <TouchableHighlight onPress={() => this.props.navigation.navigate('PublishAdNavigator')} underlayColor='rgba(0,0,0,0)'>
+          <View style={styles.iconView}>
+            <Ionicons name="ios-add-circle" size={65} color="#2e4964" />
+          </View>
+        </TouchableHighlight>
       </View>
     );
   }
